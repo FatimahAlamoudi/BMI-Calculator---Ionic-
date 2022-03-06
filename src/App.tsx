@@ -1,19 +1,23 @@
 import { Redirect, Route } from 'react-router-dom';
 import {
   IonApp,
-  IonIcon,
+  IonHeader,
+  IonToolbar,
+  setupIonicReact,
+  IonTitle,
+  IonContent,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonItem,
   IonLabel,
-  IonRouterOutlet,
-  IonTabBar,
-  IonTabButton,
-  IonTabs,
-  setupIonicReact
+  IonInput,
+  IonAlert,
 } from '@ionic/react';
-import { IonReactRouter } from '@ionic/react-router';
-import { ellipse, square, triangle } from 'ionicons/icons';
-import Tab1 from './pages/Tab1';
-import Tab2 from './pages/Tab2';
-import Tab3 from './pages/Tab3';
+import React, { useRef, useState } from 'react';
+import { calculatorOutline, refreshOutline } from 'ionicons/icons';
+import BmiControls  from './components/BmiControls';
+import BmiResult from './components/BmiResult';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -33,44 +37,92 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import InputControls from './components/InputControls';
 
 setupIonicReact();
 
-const App: React.FC = () => (
+const App: React.FC = () => {
+  const [result, setResult] = useState<number>();
+  const [error, setError] = useState<string>();
+  const [calcUnits, setCalcUnits] = useState<'mkg' | 'ftlbs'>('mkg');
+
+  const weightInputRef = useRef<HTMLIonInputElement>(null);
+  const heightInputRef = useRef<HTMLIonInputElement>(null);
+  const calculateBMI = () => {
+    const enteredHeight = heightInputRef.current?.value; //? shortcut for ternary operation to check that the input isn't null
+    const enteredWeight = weightInputRef.current?.value;
+    if(!enteredHeight || !enteredWeight || +enteredWeight <=0 || +enteredHeight <=0)
+    {
+      setError('Please enter a vaild (non-negative) input number.')
+      return;
+    }
+    const weightConversionFactor = calcUnits === 'ftlbs' ? 2.2 : 1;
+    const heightConversionFactor = calcUnits === 'ftlbs' ? 3.28 : 1;
+    const weight = +enteredWeight / weightConversionFactor;
+    const height = +enteredHeight / heightConversionFactor;
+    const bmi = weight / (height * height);
+    setResult(bmi);
+  };
+  const resetInputs = () => {
+    weightInputRef.current!.value = '';
+    heightInputRef.current!.value = '';
+  };
+
+  const clearErrors = () =>{
+    setError(' ');
+  };
+
+  const selectCalcUnitHandler = (selectedValue: 'mkg' | 'ftlbs') =>{
+    setCalcUnits(selectedValue);
+
+  }
+
+  return (
+    <React.Fragment>
+      <IonAlert
+       isOpen={!!error} 
+       message={error} 
+       buttons={[{text: 'Okay', handler: clearErrors }]}
+       />
   <IonApp>
-    <IonReactRouter>
-      <IonTabs>
-        <IonRouterOutlet>
-          <Route exact path="/tab1">
-            <Tab1 />
-          </Route>
-          <Route exact path="/tab2">
-            <Tab2 />
-          </Route>
-          <Route path="/tab3">
-            <Tab3 />
-          </Route>
-          <Route exact path="/">
-            <Redirect to="/tab1" />
-          </Route>
-        </IonRouterOutlet>
-        <IonTabBar slot="bottom">
-          <IonTabButton tab="tab1" href="/tab1">
-            <IonIcon icon={triangle} />
-            <IonLabel>Tab 1</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="tab2" href="/tab2">
-            <IonIcon icon={ellipse} />
-            <IonLabel>Tab 2</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="tab3" href="/tab3">
-            <IonIcon icon={square} />
-            <IonLabel>Tab 3</IonLabel>
-          </IonTabButton>
-        </IonTabBar>
-      </IonTabs>
-    </IonReactRouter>
+    <IonHeader>
+      <IonToolbar color='primary'>
+        <IonTitle>
+            BMI Calculator
+        </IonTitle>
+      </IonToolbar>
+    </IonHeader>
+    <IonContent class="ion-padding">
+      <IonGrid>
+      <IonRow>
+        <IonCol>
+          <InputControls selectedValue={calcUnits} onSelectValue={selectCalcUnitHandler}/>
+        </IonCol>
+      </IonRow>
+        <IonRow>
+          <IonCol>
+            <IonItem>
+            <IonLabel position="floating">Your Height ({calcUnits === 'mkg' ? 'meters': 'feet'})</IonLabel>
+              <IonInput type="number" ref={heightInputRef}></IonInput>
+            </IonItem>
+          </IonCol>
+          </IonRow>
+          <IonRow>
+          <IonCol>
+            <IonItem>
+              <IonLabel position="floating">Your Weight ({calcUnits === 'mkg' ? 'kg' : 'lbs'})</IonLabel>
+              <IonInput type="number" ref={weightInputRef}></IonInput>
+            </IonItem>
+          </IonCol>
+        </IonRow>
+       <BmiControls onCalculate={calculateBMI} onRest={resetInputs} />
+        {result && (<BmiResult result={result}/>
+        )}
+      </IonGrid>
+    </IonContent>
   </IonApp>
+  </React.Fragment>
 );
+}
 
 export default App;
