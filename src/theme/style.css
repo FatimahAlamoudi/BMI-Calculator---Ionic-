@@ -1,0 +1,153 @@
+:root{
+    --ion-color-strong-cyan: hsl(172, 67%, 45%);
+    --ion-color-very-dark-cyan: hsl(183, 100%, 15%);
+    --ion-color-dark-grayish-cyan: hsl(186, 14%, 43%);
+    --ion-color-grayish-cyan: hsl(184, 14%, 56%);
+    --ion-color-light-grayish-cyan: hsl(185, 41%, 84%);
+    --ion-color-very-light-grayish-cyan: hsl(189, 41%, 97%);
+    --ion-color-white: hsl(0, 0%, 100%);;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Space Mono', monospace;
+}
+
+.ion-color-main-app{
+    --background: var(--ion-color-very-light-grayish-cyan);
+}
+
+.ion-color-very-dark-cyan{
+    color: var(--ion-color-very-dark-cyan);
+}
+   
+.ion-color-very-dark-cyan{
+    color: var(--ion-color-very-dark-cyan);
+}
+
+.ion-card{
+    background-color: var(--ion-color-white);
+    padding: 1em;
+    border-radius: 1em 1em 0 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2em;
+}
+
+.ion-label{
+    color: var(--ion-color-dark-grayish-cyan);
+}
+
+.ion-input{
+    background-color: var(--ion-color-very-light-grayish-cyan);
+    color: var(--ion-color-very-dark-cyan);
+    font-weight: bold;
+}
+
+.ion-button{
+    --background: var(--ion-color-very-dark-cyan);
+    color: var(--ion-color-white);
+    width: 40vw;
+    font-weight: bold;
+    margin-top: 1em;
+}
+
+.ion-button:hover, .ion-button:active, .ion-button:focus {
+    --background: var(--ion-color-strong-cyan);
+}
+
+.ion-custom-input{
+    --color: var(--ion-color-very-dark-cyan);
+    width: 40vw;
+}
+
+.ion-result-card{
+    margin-top: 2em;
+    background-color: var(--ion-color-very-dark-cyan);
+    border-radius: 1em;
+    height: 100%;
+    padding-inline: 2em;
+}
+
+.icon-color-very-light-grayish-cyan{
+    color: var(--ion-color-very-light-grayish-cyan);
+}
+
+.ion-color-grayish-cyan{
+    color: var(--ion-color-grayish-cyan);
+}
+
+.ion-result{
+    color: var(--ion-color-strong-cyan);
+    font-size: 1.4em;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+.ion-rest-button{
+    margin-top: 3em;
+    --background: var(--ion-color-strong-cyan);
+    color: var(--ion-color-very-dark-cyan);
+    width: 80vw;
+    font-weight: bold;
+}
+
+.ion-grid-buttons{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-areas: 'discount-1 discount-2'
+                        'discount-3 discount-4'
+                        'discount-5 custom';
+    place-content: center;
+}
+
+.discount-1{
+    grid-area: discount-1;
+}
+
+.discount-2{
+    grid-area: discount-2;
+}
+
+.discount-3{
+    grid-area: discount-3;
+}
+
+.discount-4{
+    grid-area: discount-4;
+}
+
+.discount-5{
+    grid-area: discount-5;
+}
+
+.custom{
+    grid-area: custom;
+}
+   
+@media (min-width: 700px){
+    .ion-card{
+        flex-direction: row;
+    }
+
+    .ion-first-col, .ion-second-col{
+        width: 50%;
+    }
+
+    .ion-grid-buttons{
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-areas: 'discount-1 discount-2 discount-3'
+                            'discount-4 discount-5 custom';
+    }  
+
+    .ion-button, .ion-custom-input{
+        width: 80%;
+    }
+
+    .ion-result-card{
+        align-self: center;
+    }
+}
